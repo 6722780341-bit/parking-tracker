@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parking Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Parking Tracker</h1>
+    <nav id="lots">
+      <a href="?lot=model" data-lot="model">Model (A1–A4)</a>
+      <a href="?lot=real" data-lot="real">Car park (P1–P3)</a>
+    </nav>
+  </header>
+
+  <main>
+    <p id="setup-warning" class="banner" hidden>
+      Not connected: fill in <code>config.js</code> with your Supabase URL and publishable key.
+    </p>
+    <p id="error" class="banner" hidden></p>
+
+    <section class="summary">
+      <div><span id="free-count">–</span> <small>free now</small></div>
+      <div class="updated">Updated <span id="updated">never</span></div>
+    </section>
+
+    <section id="spots" class="spots" aria-live="polite"></section>
+
+    <ul class="legend">
+      <li><i class="dot free"></i>Free</li>
+      <li><i class="dot reserved"></i>Reserved today</li>
+      <li class="only-model"><i class="dot waiting"></i>Waiting for OTP</li>
+      <li><i class="dot occupied"></i>Occupied</li>
+      <li class="only-real"><i class="dot mismatch"></i>Wrong car</li>
+      <li><i class="dot offline"></i>Sensor offline</li>
+    </ul>
+
+    <section class="card">
+      <h2>Reserve a spot</h2>
+      <form id="reserve">
+        <label>Spot <select id="r-spot" required></select></label>
+        <label>Date <input id="r-date" type="date" required></label>
+        <label class="only-real">License plate <input id="r-plate" placeholder="e.g. กข 1234" maxlength="20"></label>
+        <button type="submit">Reserve</button>
+        <p id="r-msg" class="msg" role="status"></p>
+      </form>
+      <div id="r-otp" class="otp" hidden>
+        Your OTP: <strong id="r-otp-code"></strong>
+        <small>Keep it. After parking, enter it below to confirm it is you.</small>
+      </div>
+      <p class="hint only-model">You get a 6-digit OTP. After you park, enter it under "Verify your arrival".</p>
+      <p class="hint only-real">The camera reads the plate of the car that parks and checks it against your booking.</p>
+    </section>
+
+    <section class="card only-model">
+      <h2>Verify your arrival</h2>
+      <form id="verify">
+        <label>Spot <select id="v-spot" required></select></label>
+        <label>OTP <input id="v-otp" inputmode="numeric" maxlength="6" placeholder="6 digits" required></label>
+        <button type="submit">Verify</button>
+        <p id="v-msg" class="msg" role="status"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Upcoming bookings</h2>
+      <ul id="bookings" class="bookings"><li class="muted">None</li></ul>
+    </section>
+  </main>
+
+  <footer>Plates are partly hidden on this public page.</footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
